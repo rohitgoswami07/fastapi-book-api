@@ -1,0 +1,20 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
+
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:macp9022@localhost:5432/bookstore"
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+
+Sessionlocal = sessionmaker(autocommit=False,autoflush=False, bind=engine)
+Base = declarative_base()
+
+def get_db():
+     db = Sessionlocal()
+     try:
+          yield db
+     finally:
+          db.close()
+
+def create_db():
+     Base.metadata.create_all(bind=engine)
+     
